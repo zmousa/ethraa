@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Arabic enricher for barmajan hakathon"
+authors = ["Zaher Mousa <zaher.musa@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.9.7 || >3.9.7,<4.0"
+streamlit = "^1.22.0"
+transformers = "^4.35.0"
+langchain = "^0.0.333"
+deep_translator = "^1.11.4"
+sentencepiece = "^0.1.99"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.12.1"
+pytest = "^7.1.2"
+pre-commit = "^2.19.0"
+pytest-timeout = "^2.1.0"
+asynctest = "^0.13.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 79
+target-version = ['py39']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
