@@ -3,6 +3,9 @@ import pandas as pd
 import streamlit as st
 from pipeline.stages.translate.translate import TranslateStage
 from pipeline.stages.llm.llm_translate import LLMTranslateStage
+from pipeline.stages.api.rest_api import ApiController
+from settings import settings
+
 
 st.set_page_config(
     page_title="الإثراء الرقمي",
@@ -17,6 +20,7 @@ class Option:
 
 translate_stage = TranslateStage()
 llm_translate_stage = LLMTranslateStage()
+apiController = ApiController(settings)
 
 # Set RTL direction
 st.markdown("""<style>body {direction: rtl;}</style>""", unsafe_allow_html=True)
@@ -60,3 +64,7 @@ if st.session_state.get("query_submitted"):
 
     table = table_df.style.set_table_styles([s0,s1,s2]).to_html()
     st.write(f'{table}', unsafe_allow_html=True)
+    
+    # Test api call
+    # search_result = apiController.api_search("كلمة")
+    # print(search_result)
