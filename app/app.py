@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 from pipeline.stages.translate.translate import TranslateStage
 from pipeline.stages.llm.llm_translate import LLMTranslateStage
+from pipeline.stages.llm.llm_tagger import LLMTaggerStage
 from pipeline.stages.api.rest_api import ApiController
 from settings import settings
 
@@ -20,6 +21,7 @@ class Option:
 
 translate_stage = TranslateStage()
 llm_translate_stage = LLMTranslateStage()
+llm_tagger_stage = LLMTaggerStage()
 apiController = ApiController(settings)
 
 # Set RTL direction
@@ -68,3 +70,7 @@ if st.session_state.get("query_submitted"):
     # Test api call
     # search_result = apiController.api_search("كلمة")
     # print(search_result)
+    
+    # Test tagger
+    # test_parts = ['هذا', 'علي خليل', 'محمد', 'يأكل', 'معجم', 'كلام', 'دمشق']
+    # llm_tagger_stage.tag(test_parts)
