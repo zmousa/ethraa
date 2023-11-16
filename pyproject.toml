@@ -11,6 +11,7 @@ transformers = "^4.35.0"
 langchain = "^0.0.333"
 deep_translator = "^1.11.4"
 sentencepiece = "^0.1.99"
+requests = "^2.26.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.12.1"
