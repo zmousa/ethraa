@@ -21,5 +21,5 @@ poetry install
 
 ## Run locally
 ```
-streamlit run --server.enableCORS false --browser.gatherUsageStats false app/app.p
+streamlit run --server.enableCORS false --browser.gatherUsageStats false app/app.py
 ```
