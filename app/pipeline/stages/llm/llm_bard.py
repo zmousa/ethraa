@@ -14,6 +14,10 @@ class LLMBard:
         
 
 
+
+# Visit https://bard.google.com/
+# Open the console
+# Session: Application → Cookies → Copy the following values
 bard_cookie_dict = {
     "__Secure-1PSID": "",
     "__Secure-1PSIDTS": "",
