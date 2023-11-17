@@ -6,6 +6,7 @@ class TranslateStage:
     google_translator_en = GoogleTranslator(source='ar', target='en')
     
     def translate_ar(self, input_text: str) -> str:
+        print(f"input: {input_text}")
         translated_text = self.google_translator_ar.translate(input_text)
         print(f"translated_text: {translated_text}")
         return translated_text
