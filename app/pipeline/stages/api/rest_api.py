@@ -29,7 +29,10 @@ class ApiController:
             print(f"API Response: {response.json()}")
             
             if response.status_code == 200:
-                return SearchResult.FOUND
+                if f"{response.json()}" == "[]":
+                    return SearchResult.NOT_FOUND
+                else:
+                    return SearchResult.FOUND
             elif response.status_code == 404:
                 return SearchResult.NOT_FOUND
             else:
