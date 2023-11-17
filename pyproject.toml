@@ -13,6 +13,8 @@ deep_translator = "^1.11.4"
 sentencepiece = "^0.1.99"
 requests = "^2.26.0"
 beautifulsoup4 = "^4.11.1"
+bardapi = "^0.1.38"
+nltk = "^3.8.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.12.1"
