@@ -50,7 +50,7 @@ translation_option = st.sidebar.radio("اختر طريقة الترجمة:", opt
 st.header("الإثراء الرقمي")
 st.divider()
 st.markdown("#### ضع رابط مقالة من الويكيبيديا الانكليزية:")
-query = st.text_input("", "https://en.wikipedia.org/wiki/El_Dorado_Fire", key="txt_area_query")
+query = st.text_input("", "https://en.wikipedia.org/wiki/Banlic_station", key="txt_area_query")
 def submit_query():
     st.session_state["query_submitted"] = True
 
