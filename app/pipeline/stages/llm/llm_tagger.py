@@ -12,4 +12,4 @@ class LLMTaggerStage:
     
     def tag(self, parts):
         annotations = self.nlp_model(parts)
-        print(annotations)
+        return annotations

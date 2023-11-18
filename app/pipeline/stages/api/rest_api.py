@@ -1,6 +1,7 @@
 import requests
 from .model.search_result import SearchResult
 from .model.create_body import CreateBody, FormRepresentation, Lemma
+import json
 
 
 # swagger: https://siwar.ksaa.gov.sa/api-brmjn#/
@@ -42,6 +43,14 @@ class ApiController:
             print(f"Error making request: {e}")
             return None
 
+    def create_obj(self, word):
+        return Lemma(formRepresentations=[FormRepresentation(form=word, phonetic="", dialect="", audio="")], type="string")
+
+    def serialize(self, obj):
+        if isinstance(obj, (FormRepresentation, Lemma)):
+            return obj.__dict__
+        return obj
+
     def api_create(self, create_body):
         endpoint = "/create/entry"
         url = self.BASE_URL + endpoint
@@ -51,7 +60,9 @@ class ApiController:
         }
         
         try:
-            response = requests.post(url, headers=headers, json=create_body.__dict__, verify=False)
+            lemma_dict = json.dumps(create_body, default=self.serialize)
+            response = requests.post(url, headers=headers, json=lemma_dict, verify=False)
+            print(response)
             return response.status_code == 201
         except requests.exceptions.RequestException as e:
             print(f"Error making request: {e}")
