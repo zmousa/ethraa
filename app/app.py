@@ -98,6 +98,11 @@ def fetch_data(query):
     table_df = pd.DataFrame(table_dicts)
     return table_df
 
+clear_cache_button = st.sidebar.button("Clear Cache")
+if clear_cache_button:
+    fetch_data.clear()
+    st.session_state["query_submitted"] = False
+
 def perform_action(word):
     # pause create to reserve quota
     # apiController.api_create(apiController.create_obj(word))
