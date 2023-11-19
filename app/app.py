@@ -80,6 +80,8 @@ def fetch_data(query):
             )
         )
 
+    word_count_list_sorted = sorted(word_count_list, key=lambda item: len(item.word.senses), reverse=True)
+
     table_dicts = [
         {
             'word': item.word.word,
@@ -89,7 +91,7 @@ def fetch_data(query):
             'type': item.word.type,
             'senses': item.word.senses,
             'found': item.found
-        } for item in word_count_list
+        } for item in word_count_list_sorted
     ]
     print(table_dicts)
 
