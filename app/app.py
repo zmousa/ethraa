@@ -133,10 +133,13 @@ if st.session_state.get("query_submitted"):
         if show_more:
             placeholder.button("إغلاق", key=str(index)+"_")
             st.write("الإثراء الدلالي للكلمة:")
-            st.write(f" الإثراء الأنطولوجي: {row['nltk']}")
+            if len(row['nltk']) > 0:
+                st.write(f" الإثراء الأنطولوجي: {row['nltk']}")
             st.write(f" التعرف على الكيانات: {row['ner']}")
             st.write(f" النوع: {row['type']}")
-            st.write(f" المعاني: {str(row['senses'])}")
+            if len(row['senses']) > 0:
+                st.write("المعاني:")
+                st.write("- " + "\n- ".join([f"**{key}:** {value}" for key, value in row['senses']]))
             st.write("---")
 
     if st.button("أضف الكلمات المحددة"):

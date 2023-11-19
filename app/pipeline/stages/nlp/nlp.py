@@ -36,4 +36,5 @@ class NLP_Lemmatizer:
 
     def wordnet_lookup(self, word):
         res = self.cur.execute("select type, LINK2 from LINK where LINK1 like ? and LINK2 not like ? and type in ('related_to','near_synonym','near_antonym','pertainym','hyponym','has_hyponym') LIMIT 50", (buckwalter.transliterate(word[0:-1])+'%','%EN',))
-        return res.fetchall()
+        untransliterated_words = [(rel, buckwalter.untransliterate(word.split("_")[0])) for rel, word in res]
+        return untransliterated_words
