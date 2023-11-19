@@ -1,4 +1,4 @@
-# Arabicthon 2023
+# Ethraa
 - https://arabicthon.ksaa.gov.sa
 
 ## Team
