@@ -47,6 +47,11 @@ option2 = Option("نموذج اللغة الضخم LLM", 2)
 options = [option1, option2]
 translation_option = st.sidebar.radio("اختر طريقة الترجمة:", options, format_func=lambda option: option.name)
 
+api_option1 = Option("معالجة جميع الكلمات", 1)
+api_option2 = Option("تفعيل بحث و إضافة المعجم", 2)
+api_options = [api_option1, api_option2]
+api_option = st.sidebar.radio("الارتباط مع المعجم:", api_options, format_func=lambda option: option.name)
+
 st.header("الإثراء الرقمي")
 st.divider()
 st.markdown("#### ضع رابط مقالة من الويكيبيديا الانكليزية:")
@@ -68,6 +73,14 @@ def fetch_data(query):
 
     word_count_list = []
     for word_item in words[:words_num]:
+        if api_option.id == 2:
+            found_status = apiController.api_search(word_item.word)
+            if found_status == SearchResult.FOUND:
+                found_status = True
+            else:
+                found_status = False
+        else:
+            found_status = False
         word_count_list.append(
             ResultItem(
                 word=word_item,
@@ -76,7 +89,7 @@ def fetch_data(query):
                 nltk= list(nltk_word_net.get_synonyms_antonyms(word_item.word).get('synonyms', set())),
                 ner= llm_tagger_stage.tag([word_item.word]),
                 # pause lookup to reserve quota
-                found = False # apiController.api_search(word_item.word) == SearchResult.FOUND
+                found = found_status
             )
         )
 
@@ -90,10 +103,10 @@ def fetch_data(query):
             'ner': item.ner,
             'type': item.word.type,
             'senses': item.word.senses,
+            'meaning': item.word.meaning,
             'found': item.found
         } for item in word_count_list_sorted
     ]
-    print(table_dicts)
 
     table_df = pd.DataFrame(table_dicts)
     return table_df
@@ -104,8 +117,8 @@ if clear_cache_button:
     st.session_state["query_submitted"] = False
 
 def perform_action(word):
-    # pause create to reserve quota
-    # apiController.api_create(apiController.create_obj(word))
+    if api_option.id == 2:
+        apiController.api_create(apiController.create_obj(word))
     st.write("تم إضافة الكلمات المحددة:", word)
 
 if st.session_state.get("query_submitted"):
@@ -135,23 +148,32 @@ if st.session_state.get("query_submitted"):
             do_action = button_phold.button(button_type, key=f"button_{index}")
             if do_action:
                 perform_action(row['word'])
+        else:
+            button_type = "موجودة"
+            button_phold.button(button_type, key=f"button_{index}", disabled=True)
         placeholder = col6.empty()
         show_more = placeholder.button("المزيد", key=index, type="primary")
         if show_more:
             placeholder.button("إغلاق", key=str(index)+"_")
-            st.write("الإثراء الدلالي للكلمة:")
+            st.markdown('<b><span style="color: blue; text-decoration: underline;">الإثراء الدلالي للكلمة:</span></b>', unsafe_allow_html=True)
             if len(row['nltk']) > 0:
-                st.write(f" الإثراء الأنطولوجي: {row['nltk']}")
-            st.write(f" التعرف على الكيانات: {row['ner']}")
-            st.write(f" النوع: {row['type']}")
+                st.markdown('<b><span style="color: blue; text-decoration: underline;">الإثراء الأنطولوجي:</span></b>', unsafe_allow_html=True)
+                st.write("  - " + "\n- ".join([f"**{row['nltk']}**"]))
+            st.markdown('<span style="color: red; text-decoration: underline;">النوع:</span>', unsafe_allow_html=True)
+            st.write("  - " + "\n- ".join([f"**{row['type']}**"]))
+            if row['meaning']:
+                st.markdown('<span style="color: red; text-decoration: underline;">المعنى:</span>', unsafe_allow_html=True)
+                translated_meaning = translate_stage.translate_ar(row['meaning'])
+                translated_meaning_array = translated_meaning.split("؛")
+                st.write("  - " + "\n- ".join([f"{meaning}" for meaning in translated_meaning_array]))
             if len(row['senses']) > 0:
-                st.write("المعاني:")
-                st.write("- " + "\n- ".join([f"**{key}:** {value}" for key, value in row['senses']]))
+                st.markdown('<span style="color: red; text-decoration: underline;">العلاقات:</span>', unsafe_allow_html=True)
+                st.write("  - " + "\n- ".join([f"**{key}:** {value}" for key, value in row['senses']]))
             st.write("---")
 
     if st.button("أضف الكلمات المحددة"):
         for selected_key in selected_indices:
             selected_item = data_dict.get(selected_key)
-            # pause create to reserve quota
-            # apiController.api_create(apiController.create_obj(selected_item['word']))
+            if api_option.id == 2:
+                apiController.api_create(apiController.create_obj(selected_item['word']))
             st.write("تم إضافة الكلمات المحددة:", selected_item['word'])
