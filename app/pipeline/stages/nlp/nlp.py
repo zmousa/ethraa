@@ -4,6 +4,11 @@ import sqlite3
 from itertools import chain
 
 
+class LemmaMiniItem:
+    def __init__(self, word, type):
+        self.word = word
+        self.type = type
+
 class LemmaItem:
     def __init__(self, word, type, senses, meaning):
         self.word = word
@@ -35,12 +40,19 @@ class NLP_Lemmatizer:
         result = list(set(chain(*all_lemmas)))
         lemma_items = []
         for t in result:
-            item = LemmaItem(t[0], self.ar_types.get(t[1], t[1]), self.wordnet_lookup(t[0]), self.get_meaning(t[0]))
+            item = LemmaMiniItem(t[0], self.ar_types.get(t[1], t[1]))
+            lemma_items.append(item)
+        return lemma_items
+
+    def lookup_ontology(self, words):
+        lemma_items = []
+        for word_item in words:
+            item = LemmaItem(word_item.word, word_item.type, self.wordnet_lookup(word_item.word), self.get_meaning(word_item.word))
             lemma_items.append(item)
         return lemma_items
 
     def wordnet_lookup(self, word):
-        res = self.cur.execute("select type, LINK2 from LINK where LINK1 like ? and LINK2 not like ? and type in ('related_to','near_synonym','near_antonym','pertainym','hyponym','has_hyponym') LIMIT 50", (buckwalter.transliterate(word[0:-1])+'%','%EN',))
+        res = self.cur.execute("select type, LINK2 from LINK where LINK1 like ? and LINK2 not like ? and type in ('related_to','near_synonym','near_antonym','pertainym','hyponym','has_hyponym') ORDER BY type LIMIT 50", (buckwalter.transliterate(word[0:-1])+'%','%EN',))
         untransliterated_words = [(self.ar_relations.get(rel, rel), buckwalter.untransliterate(word.split("_")[0])) for rel, word in res]
 
         return untransliterated_words

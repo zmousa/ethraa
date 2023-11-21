@@ -47,8 +47,8 @@ option2 = Option("نموذج اللغة الضخم LLM", 2)
 options = [option1, option2]
 translation_option = st.sidebar.radio("اختر طريقة الترجمة:", options, format_func=lambda option: option.name)
 
-api_option1 = Option("معالجة جميع الكلمات", 1)
-api_option2 = Option("تفعيل بحث و إضافة المعجم", 2)
+api_option1 = Option("إيقاف", 1)
+api_option2 = Option("تفعيل", 2)
 api_options = [api_option1, api_option2]
 api_option = st.sidebar.radio("الارتباط مع المعجم:", api_options, format_func=lambda option: option.name)
 
@@ -70,9 +70,10 @@ def fetch_data(query):
         ar_text.append(translated_text)
 
     words = nlp_lemmatizer.lemmatize(ar_text)
+    words_items = nlp_lemmatizer.lookup_ontology(words[:words_num])
 
     word_count_list = []
-    for word_item in words[:words_num]:
+    for word_item in words_items:
         if api_option.id == 2:
             found_status = apiController.api_search(word_item.word)
             if found_status == SearchResult.FOUND:
@@ -155,7 +156,7 @@ if st.session_state.get("query_submitted"):
         show_more = placeholder.button("المزيد", key=index, type="primary")
         if show_more:
             placeholder.button("إغلاق", key=str(index)+"_")
-            st.markdown('<b><span style="color: blue; text-decoration: underline;">الإثراء الدلالي للكلمة:</span></b>', unsafe_allow_html=True)
+            st.markdown('<b><span style="color: braun; text-decoration: underline;">الإثراء الدلالي للكلمة:</span></b>', unsafe_allow_html=True)
             if len(row['nltk']) > 0:
                 st.markdown('<b><span style="color: blue; text-decoration: underline;">الإثراء الأنطولوجي:</span></b>', unsafe_allow_html=True)
                 st.write("  - " + "\n- ".join([f"**{row['nltk']}**"]))
