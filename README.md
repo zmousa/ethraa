@@ -27,6 +27,9 @@ poetry lock
 poetry install
 ```
 
+### Prerequisites
+Install the sqlite version of ArabNet Ontology from [here](https://drive.google.com/file/d/1naidKW2b8_9cS-DkmCJg4AA1OedlB7wc/view?pli=1) and put it in this path `app/pipeline/stages/nlp/ontology/`
+
 ### Run locally
 ```
 streamlit run --server.enableCORS false --browser.gatherUsageStats false app/app.py
