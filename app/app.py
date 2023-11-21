@@ -39,6 +39,8 @@ st.markdown("""<style>body {direction: rtl;}</style>""", unsafe_allow_html=True)
 st.session_state.setdefault("query_submitted", False)
 
 # Sidebar content
+st.sidebar.image("docs/team.png", use_column_width=True)
+
 st.sidebar.header("المعاملات:")
 words_num = st.sidebar.number_input("عدد الكلمات المستخلصة:", min_value=1, value=10, step=1, format="%d")
 
